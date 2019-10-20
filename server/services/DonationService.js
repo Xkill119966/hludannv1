@@ -115,104 +115,7 @@ class DonationService {
 		});
 	}
 
-	async donationAction(type, user_id, data) {
-		let errors = {};
-		let { _id, approxi_date, region, township, _local } = data;
 
-		return new Promise((resolve, reject) => {
-			switch (type) {
-				case "REQUEST":
-					let updateRequest = {
-						process: "PENDING",
-						"destination.approxi_date": approxi_date,
-						"destination.region": region,
-						"destination.township": township,
-						"involved.local": _local,
-						"involved.traveller_id": user_id
-					};
-					Donation.findOneAndUpdate(
-						{ _id: _id },
-						{
-							$set: updateRequest
-						},
-						{ new: true, upsert: true },
-
-						(err, updated) => {
-							if (err) {
-								errors.action = "donation process is error";
-								reject(errors);
-							} else {
-								resolve(true);
-							}
-						}
-					);
-
-					break;
-				case "ACCEPT":
-					Donation.findOneAndUpdate(
-						{ _id: _id },
-						{
-							$set: {
-								process: "ENROUTE"
-							}
-						},
-						{ new: true, upsert: true },
-
-						(err, updated) => {
-							if (err) {
-								errors.action = "donation process is error";
-								reject(errors);
-							} else {
-								resolve(true);
-							}
-						}
-					);
-					break;
-				case "REJECT":
-					Donation.findOneAndUpdate(
-						{ _id: _id },
-						{
-							$set: {
-								process: "OPEN"
-							}
-						},
-						{ new: true, upsert: true },
-
-						(err, updated) => {
-							if (err) {
-								errors.action = "donation process is error";
-								reject(errors);
-							} else {
-								resolve(true);
-							}
-						}
-					);
-					break;
-				case "COMPLETED":
-					Donation.findOneAndUpdate(
-						{ _id: _id },
-						{
-							$set: {
-								process: "OPEN"
-							}
-						},
-						{ new: true, upsert: true },
-
-						(err, data) => {
-							if (err) {
-								errors.action = "donation process is error";
-								reject(errors);
-							} else {
-								resolve(true);
-							}
-						}
-					);
-					break;
-				default:
-					break;
-			}
-		});
-	}
 
 	async deleteDonation(id) {
 		let errors = {};
@@ -274,6 +177,7 @@ class DonationService {
 
 						let pickUpData = docs.map(item => {
 							return {
+								_id: item._id,
 								name: item.local_id.user_id.username,
 								approxi_date: item.approxi_date,
 								bag: item.bag,
@@ -304,7 +208,20 @@ class DonationService {
 						errors.getPickUpByTraveller = "error in getPickUp";
 						reject(errors);
 					} else {
-						resolve(docs);
+						let pickUpData = docs.map(item => {
+							return {
+								_id: item._id,
+								name: item.local_id.user_id.username,
+								approxi_date: item.approxi_date,
+								bag: item.bag,
+								phone: item.local_id.user_id.phone,
+								traveller_name: item.traveller_id.user_id.username,
+								traveller_phone: item.traveller_id.user_id.phone,
+
+							}
+						})
+
+						resolve(pickUpData);
 					}
 				});
 		});
