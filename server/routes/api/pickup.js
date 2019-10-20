@@ -7,6 +7,8 @@ router.post("/create", authMiddleware, donorCtrl.pickUpDonation)
 
 router.get('/', authMiddleware, donorCtrl.getPickUpByLocal)
 
+router.get('/traveller', authMiddleware, donorCtrl.getPickUpByTraveller)
+
 router.post('/complete/:id', authMiddleware, donorCtrl.completePickUp)
 
 module.exports = router;

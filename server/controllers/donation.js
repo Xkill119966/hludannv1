@@ -154,6 +154,20 @@ const completePickUp = (req, res) => {
 			});
 		})
 };
+
+const getPickUpByTraveller = (req, res) => {
+	DonationService.getPickUpByTraveller(req.user._id).then(data => {
+		res.status(200).send({
+			data: data,
+			succcess: true
+		});
+	}).catch(err => {
+		res.status(500).send({
+			err,
+			succcess : false
+		})
+	})
+}
 module.exports = {
 	createDonation,
 	createClothes,
@@ -163,5 +177,6 @@ module.exports = {
 	deleteDonation,
 	pickUpDonation,
 	getPickUpByLocal,
-	completePickUp
+	completePickUp,
+	getPickUpByTraveller
 };

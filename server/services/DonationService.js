@@ -259,16 +259,46 @@ class DonationService {
 
 	async getPickUpByLocal(type, user_id) {
 		let errors = {};
-		
-		
+
+
 		return new Promise((resolve, reject) => {
 			PickUp.find(
 				{
-					process: type 
+					process: type
 
 				}, (err, docs) => {
 					if (err) {
 						errors.getPickUp = "error in getPickUp";
+						reject(errors);
+					} else {
+
+						let pickUpData = docs.map(item => {
+							return {
+								name: item.local_id.user_id.username,
+								approxi_date: item.approxi_date,
+								bag: item.bag,
+								phone: item.local_id.user_id.phone
+							}
+						})
+						resolve(pickUpData);
+					}
+				});
+		});
+	}
+
+	async getPickUpByTraveller(user_id) {
+		let errors = {};
+
+		let traveller = await Traveller.findOne({ user_id: user_id });
+
+		return new Promise((resolve, reject) => {
+			PickUp.find(
+				{
+					traveller_id: traveller._id
+
+				}, (err, docs) => {
+					if (err) {
+						errors.getPickUpByTraveller = "error in getPickUp";
 						reject(errors);
 					} else {
 						resolve(docs);

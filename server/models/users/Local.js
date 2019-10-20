@@ -24,6 +24,8 @@ const localSchema = new Schema(
 		timestamps: true
 	}
 );
+
+
 localSchema.plugin(require("mongoose-autopopulate"));
 
 const Local = mongoose.model("Local", localSchema);
