@@ -16,12 +16,12 @@ class GateService {
 	}
 
 	async createGate(data) {
-		let { name } = data;
+		let { name, location } = data;
 		let errors = {};
 		return new Promise((resolve, reject) => {
 			const newgates = new Gate({
 				name: name,
-				locations: [12, 34]
+				locations: location
 			});
 
 			newgates.save((err, docs) => {
