@@ -277,7 +277,10 @@ class DonationService {
 								name: item.local_id.user_id.username,
 								approxi_date: item.approxi_date,
 								bag: item.bag,
-								phone: item.local_id.user_id.phone
+								phone: item.local_id.user_id.phone,
+								traveller_name: item.traveller_id.user_id.username,
+								traveller_phone: item.traveller_id.user_id.phone,
+
 							}
 						})
 						resolve(pickUpData);
