@@ -122,38 +122,37 @@ const pickUpDonation = (req, res) => {
 			});
 		});
 };
-const getPickUps = async (req, res) => {
-	const { process } = req.query;
-
-	PickUp.find({
-		process
-	})
-		.then(pickups => {
+const getPickUpByLocal = async (req, res) => {
+	let { type } = req.query;
+	DonationService.getPickUpByLocal(type, req.user._id)
+		.then(data => {
 			res.status(200).send({
-				success: false,
-				pickups
+				data: data,
+				succcess: true
+			});
+		}).catch(err => {
+			res.status(200).send({
+				err,
+				succcess: false
 			});
 		})
-		.catch(err => {
-			res.status(500).send({
-				success: false,
-				err: err
-			});
-		});
 };
 
 const completePickUp = (req, res) => {
-	const { pickup_id } = req.body;
-	PickUp.findOneAndUpdate(
-		{ _id: pickup_id },
-		{
-			$set: {
-				process: "COMPLETE"
-			}
-		},
-		{ new: true },
-		(err, pickup) => {}
-	);
+	const { id } = req.params;
+	DonationService.completePickUp(id)
+		.then(data => {
+			res.status(200).send({
+				data: data,
+				succcess: true
+			});
+		})
+		.catch(err => {
+			res.status(200).send({
+				err,
+				succcess: false
+			});
+		})
 };
 module.exports = {
 	createDonation,
@@ -163,6 +162,6 @@ module.exports = {
 	donationAction,
 	deleteDonation,
 	pickUpDonation,
-	getPickUps,
+	getPickUpByLocal,
 	completePickUp
 };

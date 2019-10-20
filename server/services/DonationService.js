@@ -257,21 +257,27 @@ class DonationService {
 		});
 	}
 
-	async getPickUp(type) {
+	async getPickUpByLocal(type, user_id) {
 		let errors = {};
+		
+		
 		return new Promise((resolve, reject) => {
-			PickUp.find({ process: type }, (err, docs) => {
-				if (err) {
-					errors.getPickUp = "error in getPickUp";
-					reject(errors);
-				} else {
-					resolve(docs);
-				}
-			});
+			PickUp.find(
+				{
+					process: type 
+
+				}, (err, docs) => {
+					if (err) {
+						errors.getPickUp = "error in getPickUp";
+						reject(errors);
+					} else {
+						resolve(docs);
+					}
+				});
 		});
 	}
 
-	async completeDonation(id) {
+	async completePickUp(id) {
 		let errors = {};
 		return new Promise((resolve, reject) => {
 			PickUp.findOneAndUpdate(
